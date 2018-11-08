@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gitSteamedDatabase", "ConsoleApp1\gitSteamedDatabase.csproj", "{F55204EE-A14A-4CB2-8752-373C755917EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4586DF77-988A-4B5A-AB43-85904D15CE35}"
+	ProjectSection(SolutionItems) = preProject
+		Tables.sql = Tables.sql
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F55204EE-A14A-4CB2-8752-373C755917EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55204EE-A14A-4CB2-8752-373C755917EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F55204EE-A14A-4CB2-8752-373C755917EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F55204EE-A14A-4CB2-8752-373C755917EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8ABFEBB9-72F4-4B1D-80B9-69E5F2DFEE86}
+	EndGlobalSection
+EndGlobal
