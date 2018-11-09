@@ -10,7 +10,7 @@ namespace GitSteamedDatabase
     public class DataManager
     {
         public List<UserItem> UserItems { get; }
-        public string Connection { get; } = "Server=mssql.cs.ksu.edu;Database=cisteam_22;Integrated Security=SSPI;";
+        public string Connection { get; } = "Server=mssql.cs.ksu.edu;Database=cis560_team22;Integrated Security=SSPI;";
         public string QueryLocations { get; set; } = "..\\..\\..\\Queries\\";
 
         public DataManager()

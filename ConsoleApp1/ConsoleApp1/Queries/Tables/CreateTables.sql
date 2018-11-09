@@ -1,15 +1,17 @@
 ﻿drop table if exists gitSteamed.BundleContents
 GO
+DROP TABLE IF EXISTS gitSteamed.Libraries;
+GO
+DROP TABLE IF EXISTS gitSteamed.Reviews;
+GO
 drop table if exists gitSteamed.Items
 GO
 drop table if exists gitSteamed.Bundles
 GO
-DROP TABLE IF EXISTS gitSteamed.Reviews;
-GO
+
 DROP TABLE IF EXISTS gitSteamed.Users;
 GO
-DROP TABLE IF EXISTS gitSteamed.Libraries;
-GO
+
 
 CREATE TABLE gitSteamed.Users (
 	Username NVARCHAR(64) NOT NULL PRIMARY KEY,
@@ -19,16 +21,6 @@ CREATE TABLE gitSteamed.Users (
 	(
 		[Url] ASC
 	)
-)
-GO
-
-create table gitSteamed.BundleContents
-(
-	BundleContentsID int not null primary key identity(1,1),
-	BundleID int not null foreign key references gitSteamed.Bundles(BundleID),
-	ItemID int not null foreign key references gitSteamed.Items(ItemID),
-
-	unique(BundleID, ItemID)
 )
 GO
 
@@ -52,6 +44,15 @@ create table gitSteamed.Bundles
 )
 GO
 
+create table gitSteamed.BundleContents
+(
+	BundleContentsID int not null primary key identity(1,1),
+	BundleID int not null foreign key references gitSteamed.Bundles(BundleID),
+	ItemID int not null foreign key references gitSteamed.Items(ItemID),
+
+	unique(BundleID, ItemID)
+)
+GO
 
 CREATE TABLE gitSteamed.Reviews (
 	ReviewID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
@@ -65,7 +66,7 @@ CREATE TABLE gitSteamed.Reviews (
 	Helpful INT NULL,
 	Recommend BIT NOT NULL,
 	[Description] NVARCHAR(512) NOT NULL DEFAULT(N'No text'),
-	CONSTRAINT [UK_gitSteamed_Library_Username_TermId] UNIQUE
+	CONSTRAINT [UK_gitSteamed_Reviews_Username_ItemID] UNIQUE
 	(
 		Username ASC,
 		ItemId ASC
@@ -81,7 +82,7 @@ CREATE TABLE gitSteamed.Libraries (
 								REFERENCES gitSteamed.Items(ItemID),
 	TimePlayedForever INT NOT NULL DEFAULT(0),
 	TimePlayed2Weeks INT NOT NULL DEFAULT(0),
-	CONSTRAINT [UK_gitSteamed_Library_Username_TermId] UNIQUE
+	CONSTRAINT [UK_gitSteamed_Library_Username_ItemID] UNIQUE
 	(
 		Username ASC,
 		ItemId ASC
