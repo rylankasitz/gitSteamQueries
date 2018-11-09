@@ -3,12 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gitSteamedDatabase", "ConsoleApp1\gitSteamedDatabase.csproj", "{F55204EE-A14A-4CB2-8752-373C755917EE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Queries", "Queries", "{4586DF77-988A-4B5A-AB43-85904D15CE35}"
-	ProjectSection(SolutionItems) = preProject
-		Tables.sql = Tables.sql
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitSteamedDatabase", "ConsoleApp1\GitSteamedDatabase.csproj", "{F55204EE-A14A-4CB2-8752-373C755917EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
