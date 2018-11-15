@@ -10,12 +10,16 @@ namespace GitSteamedDatabase
     public class DataManager
     {
         public List<UserItem> UserItems { get; }
+        public List<Bundle> Bundles { get; }
+        public List<UserReview> UserReviews { get; }
         public string Connection { get; } = "Server=mssql.cs.ksu.edu;Database=cisteam_22;Integrated Security=SSPI;";
         public string QueryLocations { get; set; } = "..\\..\\..\\Queries\\";
 
         public DataManager()
         {
             UserItems =  _LoadJsonFile<UserItem>("australian_users_items.json");
+            Bundles = _LoadJsonFile<Bundle>("bundle_data.json");
+            UserReviews = _LoadJsonFile<UserReview>("australian_user_reviews.json");
         }
 
         private List<T> _LoadJsonFile<T>(string src)
@@ -26,7 +30,7 @@ namespace GitSteamedDatabase
                 string line;
                 while ((line = r.ReadLine()) != null)
                 {
-                    objects.Add(JsonConvert.DeserializeObject<T>(line.Replace("\\x", "")));
+                    objects.Add(JsonConvert.DeserializeObject<T>(line.Replace("\\x", "").Replace("True", "true").Replace("False", "false").Replace("\\U", "")));
                 }
             }
             Console.WriteLine("Loaded Json File: " + src);
