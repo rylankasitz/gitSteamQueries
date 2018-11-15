@@ -88,3 +88,31 @@ CREATE TABLE gitSteamed.Libraries (
 	)
 )
 GO
+
+
+
+CREATE OR ALTER PROCEDURE gitSteamed.AddItem
+	@itemid INT,
+	@genre NVARCHAR(64),
+	@price FLOAT,
+	@url NVARCHAR(256),
+	@name NVARCHAR(64)
+AS
+
+WITH ItemCTE(ItemID, Genre, Price, URL, Name) AS (
+	SELECT *
+	FROM (VALUES(@itemid, @genre, @price, @url, @name)) AS P(ItemId, Genre, Price, URL, Name)
+)
+MERGE gitSteamed.Items I
+USING ItemCTE C ON	C.ItemID = I.ItemID
+WHEN MATCHED THEN
+	UPDATE SET
+		I.ItemID = @itemid,
+		I.Genre = ISNULL(@genre, I.Genre),
+		I.Price = ISNULL(@price, I.Price),
+		I.URL = ISNULL(@url, I.URL),
+		I.Name = @name
+	WHEN NOT MATCHED THEN
+		INSERT (ItemID, Genre, Price, [URL], [Name])
+		VALUES(@itemid, @genre, @price, @url, @name);
+GO
