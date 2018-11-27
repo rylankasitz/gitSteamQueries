@@ -4,6 +4,13 @@
 	@url NVARCHAR(256)
 AS
 
-INSERT gitSteamed.Users(Username, ItemCount, [Url])
-VALUES(@username, @itemcount, @url)
+WITH UserCTE(Username, ItemCount, Url) AS (
+	SELECT *
+	FROM (VALUES(@username, @itemcount, @url)) AS P(Username, ItemCount, Url)
+)
+MERGE gitSteamed.Users U
+USING UserCTE C ON	C.Username = U.Username
+WHEN NOT MATCHED THEN
+	INSERT (Username, ItemCount, [Url])
+	VALUES(@username, @itemcount, @url);
 GO

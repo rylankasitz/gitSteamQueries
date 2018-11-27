@@ -8,7 +8,6 @@ drop table if exists gitSteamed.Items
 GO
 drop table if exists gitSteamed.Bundles
 GO
-
 DROP TABLE IF EXISTS gitSteamed.Users;
 GO
 
@@ -30,7 +29,8 @@ create table gitSteamed.Items
 	Genre nvarchar(64) not null,
 	Price float not null,
 	[URL] nvarchar(256) not null unique,
-	[Name] nvarchar(64) not null
+	[Name] nvarchar(64) not NULL,
+	Archived DATETIMEOFFSET NULL,
 )
 GO
 
@@ -66,6 +66,7 @@ CREATE TABLE gitSteamed.Reviews (
 	Helpful INT NULL,
 	Recommend BIT NOT NULL,
 	[Description] NVARCHAR(512) NOT NULL DEFAULT(N'No text'),
+	Archived DATETIMEOFFSET NULL,
 	CONSTRAINT [UK_gitSteamed_Reviews_Username_ItemID] UNIQUE
 	(
 		Username ASC,
