@@ -18,12 +18,24 @@ namespace GitSteamedDatabase.Parsers
 
         public override void Parse()
         {
-            using(var connection = new SqlConnection(DataManager.Connection))
+            Console.WriteLine("Initializing database objects");
+            _RunSqlFile("Tables\\CreateTables");
+            _RunSqlFile("Procedures\\AddToDatabase\\AddItem");
+            _RunSqlFile("Procedures\\AddToDatabase\\AddUsers");
+            _RunSqlFile("Procedures\\AddToDatabase\\AddToLibrary");
+            Console.WriteLine("Finished intializing database objects");
+        }
+
+        private void _RunSqlFile(string name)
+        {
+            using (var connection = new SqlConnection(DataManager.Connection))
             {
-                string script = File.ReadAllText(DataManager.QueryLocations + "Tables\\CreateTables.sql");
+                string script = File.ReadAllText(DataManager.QueryLocations + name + ".sql");
                 Server server = new Server(new ServerConnection(connection));
                 server.ConnectionContext.ExecuteNonQuery(script);
             }
         }
+
+
     }
 }

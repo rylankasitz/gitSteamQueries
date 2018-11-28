@@ -11,8 +11,14 @@ namespace GitSteamedDatabase
         {
             DataManager dataManager = new DataManager();
             var parsers = typeof(Parser).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(Parser)));
+            var tableCreators = typeof(TableCreater).Assembly.GetTypes().Where(type => type.IsSubclassOf(typeof(TableCreater)));
 
-            foreach(Type parser in parsers)
+            foreach (Type tableCreater in tableCreators)
+            {
+                var newTableCreator = Activator.CreateInstance(tableCreater, dataManager) as TableCreater;
+                newTableCreator?.MakeTable();
+            }
+            foreach (Type parser in parsers)
             {
                 var newParser = Activator.CreateInstance(parser, dataManager) as Parser;
                 newParser?.Parse();

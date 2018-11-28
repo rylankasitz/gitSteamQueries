@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using GitSteamedDatabase.JsonObjects;
+using System.Data;
+using System.Linq;
 
 namespace GitSteamedDatabase
 {
@@ -12,6 +14,8 @@ namespace GitSteamedDatabase
         public List<UserItem> UserItems { get; }
         public List<Bundle> Bundles { get; }
         public List<UserReview> UserReviews { get; }
+        public DataTable UserDataTable { get; set; }
+        public DataTable ItemDataTable { get; set; }
         public string Connection { get; } = "Server=mssql.cs.ksu.edu;Database=cis560_team22;Integrated Security=SSPI;";
         public string QueryLocations { get; set; } = "..\\..\\..\\Queries\\";
 
@@ -20,6 +24,8 @@ namespace GitSteamedDatabase
             UserItems =  _LoadJsonFile<UserItem>("australian_users_items.json");
             Bundles = _LoadJsonFile<Bundle>("bundle_data.json");
             UserReviews = _LoadJsonFile<UserReview>("australian_user_reviews.json");
+
+            UserItems = UserItems.GroupBy(x => x.user_id).Select(x => x.First()).ToList();
         }
 
         private List<T> _LoadJsonFile<T>(string src)

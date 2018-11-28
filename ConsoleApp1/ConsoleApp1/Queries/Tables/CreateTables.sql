@@ -26,10 +26,10 @@ GO
 create table gitSteamed.Items
 (
 	ItemID int not null primary key identity(1,1),
-	Genre nvarchar(64) not null,
-	Price float not null,
-	[URL] nvarchar(256) not null unique,
-	[Name] nvarchar(64) not NULL,
+	Genre nvarchar(256) null,
+	Price float null,
+	[URL] nvarchar(256) null,
+	[Name] nvarchar(256) not NULL,
 	Archived DATETIMEOFFSET NULL,
 )
 GO

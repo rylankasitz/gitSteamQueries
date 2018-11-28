@@ -7,7 +7,7 @@ namespace GitSteamedDatabase.JsonObjects
     public class UserItem
     {
         public string user_id { get; set; }
-        public int item_count { get; set; }
+        public int items_count { get; set; }
         public string steam_id { get; set; }
         public string user_url { get; set; }
         public List<Item> items { get; set; }
