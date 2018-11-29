@@ -24,6 +24,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Queries\Triggers\" />
     <Folder Include="Queries\Procedures\RemoveFromDatabase\" />
     <Folder Include="Queries\Procedures\UpdateDatabase\" />
   </ItemGroup>
