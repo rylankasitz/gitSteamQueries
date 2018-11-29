@@ -42,6 +42,7 @@ namespace GitSteamedDatabase
                 using (SqlBulkCopy bulkCopy = new SqlBulkCopy(Connection))
                 {
                     bulkCopy.DestinationTableName = "gitSteamed." + name;
+                    bulkCopy.BulkCopyTimeout = 2000;
                     try
                     {
                         bulkCopy.WriteToServer(data, DataRowState.Unchanged);
@@ -69,12 +70,17 @@ namespace GitSteamedDatabase
             using (StreamReader r = new StreamReader("JsonFiles\\" + src))
             {
                 string line;
+                var lineCount = File.ReadLines(@"JsonFiles\\" + src).Count();
+                int lineNumber = 0;
                 while ((line = r.ReadLine()) != null)
                 {
                     objects.Add(JsonConvert.DeserializeObject<T>(line.Replace("\\x", "").Replace("True", "true").Replace("False", "false").Replace("\\U", "")));
+                    lineNumber++;
+                    DisplayProgress("Loading Json File " + src + " : ", lineNumber, lineCount, lineCount / 75);
                 }
+                DisplayProgress("Loading Json File " + src + " : ", 1, 1, 1);
+                Console.Write("\n");
             }
-            Console.WriteLine("Loaded Json File: " + src);
             return objects;
         }
     }

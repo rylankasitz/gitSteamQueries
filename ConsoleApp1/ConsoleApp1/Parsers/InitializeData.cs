@@ -20,12 +20,11 @@ namespace GitSteamedDatabase.Parsers
 
         public void Parse()
         {
-            Console.WriteLine("Initializing database objects");
             _RunSqlFile("Tables\\CreateTables");
-            _RunSqlFile("Procedures\\AddToDatabase\\AddItem");
-            _RunSqlFile("Procedures\\AddToDatabase\\AddUsers");
-            _RunSqlFile("Procedures\\AddToDatabase\\AddToLibrary");
-            Console.WriteLine("Finished intializing database objects");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddItem");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddUsers");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddToLibrary");
+            Console.WriteLine("Initialized database objects");
         }
 
         private void _RunSqlFile(string name)
@@ -37,7 +36,5 @@ namespace GitSteamedDatabase.Parsers
                 server.ConnectionContext.ExecuteNonQuery(script);
             }
         }
-
-
     }
 }

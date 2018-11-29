@@ -39,12 +39,15 @@ namespace GitSteamedDatabase.Parsers
                 userCount++;
                 DataManager.DisplayProgress("User Items Progress: ", userCount, DataManager.UserItems.Count, DataManager.UserItems.Count / 1000);
             }
+            DataManager.DisplayProgress("User Items Progress: ", 1, 1, 1);
             Console.WriteLine("\nAdded " + userCount + " users");
             DataManager.AddTable("Users", DataManager.UserDataTable);
             DataManager.AddTable("Items", DataManager.ItemDataTable);
             DataManager.AddTable("Libraries", DataManager.LibraryDataTable);
-        }     
-        
+        }
+
+        #region Private Helper Methods
+
         private void _AddUser(string username, string url, int itemcount)
         {
             DataRow row = DataManager.UserDataTable.NewRow();
@@ -62,7 +65,6 @@ namespace GitSteamedDatabase.Parsers
             row["URL"] = url;
             row["Name"] = itemname;
             if(price != -1) row["Price"] = price;
-            row["Archived"] = DateTime.Now;
             DataManager.ItemDataTable.Rows.Add(row);
         }
 
@@ -87,5 +89,7 @@ namespace GitSteamedDatabase.Parsers
             }
             return null;
         }
+
+        #endregion
     }
 }

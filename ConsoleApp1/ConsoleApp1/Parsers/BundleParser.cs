@@ -29,10 +29,13 @@ namespace GitSteamedDatabase.Parsers
                 DataManager.DisplayProgress("Bundle Progress: ", bundleCount, DataManager.Bundles.Count, 1);
                 bundleCount++;
             }
-            Console.WriteLine("\nAdded" + bundleCount + " Bundles");
+            DataManager.DisplayProgress("Bundle Progress: ", 1, 1, 1);
+            Console.WriteLine("\nAdded " + bundleCount + " Bundles");
             DataManager.AddTable("Bundles", DataManager.BundleDataTable);
             DataManager.AddTable("BundleContents", DataManager.BundleContentsDataTable);
         }
+
+        #region Private Helper Methods
 
         private void _AddBundle(int bundleID, string name, string url, double finalPrice, double discountedPrice)
         {
@@ -64,5 +67,7 @@ namespace GitSteamedDatabase.Parsers
             }
             return -1;
         }
+
+        #endregion
     }
 }

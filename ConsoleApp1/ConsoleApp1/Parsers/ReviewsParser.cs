@@ -38,11 +38,14 @@ namespace GitSteamedDatabase.Parsers
                     addedItems.Add(Int32.Parse(review.item_id));
                     reviewCount++;
                     DataManager.DisplayProgress("Reviews Progress: ", reviewCount, length, freq);
-                }   
+                }
             }
+            DataManager.DisplayProgress("Reviews Progress: ", 1, 1, 1);
             Console.WriteLine("\nAdded " + reviewCount + " reviews");
             DataManager.AddTable("Reviews", DataManager.ReviewsDataTable);
         }
+
+        #region Private Helper Methods
 
         private void _AddReview(string username, int itemid, int funny, DateTime posted, DateTime lastedited, int hepful, int recommended, string description)
         {
@@ -57,5 +60,7 @@ namespace GitSteamedDatabase.Parsers
             row["Description"] = description;
             DataManager.ReviewsDataTable.Rows.Add(row);
         }
+
+        #endregion
     }
 }
