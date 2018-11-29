@@ -18,13 +18,17 @@ namespace GitSteamedDatabase.CSTableObjects
             DataColumn ItemID = new DataColumn();
             ItemID.DataType = System.Type.GetType("System.Int32");
             ItemID.ColumnName = "ItemID";
-            ItemID.AutoIncrement = true;
             table.Columns.Add(ItemID);
 
             DataColumn Genre = new DataColumn();
             Genre.DataType = System.Type.GetType("System.String");
             Genre.ColumnName = "Genre";
             table.Columns.Add(Genre);
+
+            DataColumn Price = new DataColumn();
+            Price.DataType = System.Type.GetType("System.Double");
+            Price.ColumnName = "Price";
+            table.Columns.Add(Price);
 
             DataColumn URL = new DataColumn();
             URL.DataType = System.Type.GetType("System.String");
@@ -36,13 +40,8 @@ namespace GitSteamedDatabase.CSTableObjects
             Name.ColumnName = "Name";
             table.Columns.Add(Name);
 
-            DataColumn Price = new DataColumn();
-            Price.DataType = System.Type.GetType("System.Single");
-            Price.ColumnName = "Price";
-            table.Columns.Add(Price);
-
             DataColumn Archived = new DataColumn();
-            Archived.DataType = System.Type.GetType("System.DateTimeOffset");
+            Archived.DataType = System.Type.GetType("System.DateTime");
             Archived.ColumnName = "Archived";
             table.Columns.Add(Archived);
 

@@ -17,120 +17,33 @@ namespace GitSteamedDatabase.Parsers
         public override void Parse()
         {
             int userCount = 0;
-            List<Item> addedItems = new List<Item>();
-            List<Item> addedBundleItems = new List<Item>();
-            Console.WriteLine("Adding User and Items Data");      
+            List<int> addedItems = new List<int>();
             foreach(UserItem userItem in DataManager.UserItems)
             {
                 _AddUser(userItem.user_id, userItem.user_url, userItem.items_count);
                 foreach (Item item in userItem.items)
                 {
                     BundleItem bundleItem = _GetBundleItem(item.item_name);
-                    if (bundleItem != null && !addedBundleItems.Contains(item))
+                    if (bundleItem != null && !addedItems.Contains(item.item_id))
                     {
-                        _AddItem(item.item_name, bundleItem.item_url, bundleItem.genre, float.Parse(bundleItem.discounted_price.Replace("$", "")));
-                        addedBundleItems.Add(item);
+                        _AddItem(item.item_id, item.item_name, bundleItem.item_url, bundleItem.genre, Math.Round(float.Parse(bundleItem.discounted_price.Replace("$", "")), 2));
+                        addedItems.Add(item.item_id);
                     }
-                    else if(!addedBundleItems.Contains(item) && !addedItems.Contains(item))
+                    else if(!addedItems.Contains(item.item_id))
                     {
-                        _AddItem(item.item_name, null, null, 0);
-                        addedItems.Add(item);
-                    }                      
+                        _AddItem(item.item_id, item.item_name, null, null, -1);
+                        addedItems.Add(item.item_id);
+                    }
+                    _AddLibrary(userItem.user_id, item.item_id, item.playtime_forever, item.playtime_2weeks);
                 }
                 userCount++;
-                if ((userCount % 10) == 0)
-                {
-                    Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
-                    Console.Write("User Count: " + userCount);
-                }
-                if (userCount == 100) break;
+                DataManager.DisplayProgress("User Items Progress: ", userCount, DataManager.UserItems.Count, DataManager.UserItems.Count / 1000);
             }
-            Console.WriteLine("Added " + userCount + " users");
-            _AddTable("Users", DataManager.UserDataTable);
-            _AddTable("Items", DataManager.ItemDataTable);
-
-                /*using (var connection = new SqlConnection(DataManager.Connection))
-                {
-                    connection.Open();
-                    Console.WriteLine("Adding data user and item data to the database");
-                    int i = 0;
-                    foreach (UserItem userItem in DataManager.UserItems)
-                    {
-                        _AddUser(connection, userItem.user_id, userItem.user_url, userItem.items_count);
-                        foreach (Item item in userItem.items)
-                        {
-                            BundleItem bundleItem = _GetBundleItem(item.item_name);
-                            if (bundleItem != null)
-                                _AddItem(connection, item.item_name, bundleItem.item_url, bundleItem.genre, float.Parse(bundleItem.discounted_price.Replace("$", "")));
-                            else
-                                _AddItem(connection, item.item_name, null, null, 0);
-                        }
-                        if ((i % 10) == 0)
-                        {
-                            Console.Write("\r" + new string(' ', Console.WindowWidth - 1) + "\r");
-                            Console.Write("User row count: " + i);
-                        }
-                        i++;
-                    }
-                    Console.WriteLine("Finished adding user and item data to the database");
-                }*/
-        }
-
-        /*private void _AddUser(SqlConnection connection, string userName, string userURL, int itemCount)
-        {
-            using (var transaction = new TransactionScope())
-            {
-                using (var command = new SqlCommand("gitSteamed.AddUser", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("username", userName);
-                    command.Parameters.AddWithValue("url", userURL);
-                    command.Parameters.AddWithValue("itemcount", itemCount);
-
-                    command.ExecuteNonQuery();
-                    transaction.Complete();
-                }
-            }
-        }
-
-        private void _AddItem(SqlConnection connection, string itemName, string itemUrl, string genre, float price)
-        {
-            using (var transaction = new TransactionScope())
-            {
-                using (var command = new SqlCommand("gitSteamed.AddItem", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("price", price);
-                    if (itemUrl != null) command.Parameters.AddWithValue("url", itemUrl);
-                    command.Parameters.AddWithValue("name", itemName);
-                    if (genre != null) command.Parameters.AddWithValue("genre", genre);
-
-                    command.ExecuteNonQuery();
-                    transaction.Complete();
-                }
-            }
-        }*/
-
-        private void _AddTable(string name, DataTable data)
-        {
-            data.AcceptChanges();
-            using (SqlConnection connection = new SqlConnection(DataManager.Connection))
-            {
-                connection.Open();
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(DataManager.Connection))
-                {
-                    bulkCopy.DestinationTableName = "gitSteamed." + name;
-                    try
-                    {
-                        bulkCopy.WriteToServer(data, DataRowState.Unchanged);               
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-            }
-        }
+            Console.WriteLine("\nAdded " + userCount + " users");
+            DataManager.AddTable("Users", DataManager.UserDataTable);
+            DataManager.AddTable("Items", DataManager.ItemDataTable);
+            DataManager.AddTable("Libraries", DataManager.LibraryDataTable);
+        }     
         
         private void _AddUser(string username, string url, int itemcount)
         {
@@ -141,14 +54,26 @@ namespace GitSteamedDatabase.Parsers
             DataManager.UserDataTable.Rows.Add(row);
         }
 
-        private void _AddItem(string itemname, string url, string genre, float price)
+        private void _AddItem(int itemid, string itemname, string url, string genre, double price)
         {
             DataRow row = DataManager.ItemDataTable.NewRow();
+            row["ItemID"] = itemid;
             row["Genre"] = genre;
             row["URL"] = url;
             row["Name"] = itemname;
-            row["Price"] = price;
+            if(price != -1) row["Price"] = price;
+            row["Archived"] = DateTime.Now;
             DataManager.ItemDataTable.Rows.Add(row);
+        }
+
+        private void _AddLibrary(string username, int itemid, int playtimeforever, int playtime2weeks)
+        {
+            DataRow row = DataManager.LibraryDataTable.NewRow();
+            row["ItemID"] = itemid;
+            row["Username"] = username;
+            row["TimePlayedForever"] = playtimeforever;
+            row["TimePlayed2Weeks"] = playtime2weeks;
+            DataManager.LibraryDataTable.Rows.Add(row);
         }
 
         private BundleItem _GetBundleItem(string itemName)
