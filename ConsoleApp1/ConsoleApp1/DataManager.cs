@@ -21,7 +21,7 @@ namespace GitSteamedDatabase
         public DataTable BundleDataTable { get; set; }
         public DataTable BundleContentsDataTable { get; set; }
         public DataTable ReviewsDataTable { get; set; }
-        public string Connection { get; } = "Server=mssql.cs.ksu.edu;Database=cis560_team22;Integrated Security=SSPI;";
+        public string Connection { get; } = "Server=tcp:70.179.161.243;Database=master;User Id=rylan;Password=sqlgod";
         public string QueryLocations { get; set; } = "..\\..\\..\\Queries\\";
 
         public DataManager()
