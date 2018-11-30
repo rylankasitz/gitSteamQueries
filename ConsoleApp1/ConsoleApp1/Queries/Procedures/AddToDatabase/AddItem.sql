@@ -1,7 +1,7 @@
 ﻿CREATE OR ALTER PROCEDURE gitSteamed.AddItem
-	@genre NVARCHAR(64),
+	@genre NVARCHAR(64) = NULL,
 	@price FLOAT,
-	@url NVARCHAR(256),
+	@url NVARCHAR(256) = NULL,
 	@name NVARCHAR(64)
 AS
 
@@ -19,5 +19,5 @@ WHEN MATCHED THEN
 		I.Name = @name
 	WHEN NOT MATCHED THEN
 		INSERT (Genre, Price, [URL], [Name])
-		VALUES(@genre, @price, @url, @name);
+		VALUES (@genre, @price, @url, @name);
 GO

@@ -25,20 +25,20 @@ GO
 
 create table gitSteamed.Items
 (
-	ItemID int not null primary key identity(1,1),
-	Genre nvarchar(64) not null,
-	Price float not null,
-	[URL] nvarchar(256) not null unique,
-	[Name] nvarchar(64) not NULL,
+	ItemID int not null primary key,
+	Genre nvarchar(128) null,
+	Price float null,
+	[URL] nvarchar(256) null,
+	[Name] nvarchar(128) NULL,
 	Archived DATETIMEOFFSET NULL,
 )
 GO
 
 create table gitSteamed.Bundles
 (
-	BundleID int not null identity(1,1) primary key,
+	BundleID int not null primary key,
 	[Name] NVARCHAR(128) not null,
-	[URL] NVARCHAR(256) not null unique,
+	[URL] NVARCHAR(512) not null unique,
 	FinalPrice float not null,
 	DiscountPrice float null
 )
@@ -58,20 +58,20 @@ CREATE TABLE gitSteamed.Reviews (
 	ReviewID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	Username NVARCHAR(64) NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Users(Username),
-	ItemId INT NOT NULL FOREIGN KEY
+	ItemID INT NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Items(ItemID),
 	Funny INT NOT NULL DEFAULT(0),
 	Posted DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
 	LastEdited DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
 	Helpful INT NULL,
 	Recommend BIT NOT NULL,
-	[Description] NVARCHAR(512) NOT NULL DEFAULT(N'No text'),
+	[Description] NVARCHAR(4000) NOT NULL DEFAULT(N'No text'),
 	Archived DATETIMEOFFSET NULL,
-	CONSTRAINT [UK_gitSteamed_Reviews_Username_ItemID] UNIQUE
+	/*CONSTRAINT [UK_gitSteamed_Reviews_Username_ItemID] UNIQUE
 	(
 		Username ASC,
-		ItemId ASC
-	)
+		ItemID ASC
+	)*/
 )
 GO
 
@@ -79,7 +79,7 @@ CREATE TABLE gitSteamed.Libraries (
 	LibraryID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	Username NVARCHAR(64) NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Users(Username),
-	ItemId INT NOT NULL FOREIGN KEY
+	ItemID INT NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Items(ItemID),
 	TimePlayedForever INT NOT NULL DEFAULT(0),
 	TimePlayed2Weeks INT NOT NULL DEFAULT(0),

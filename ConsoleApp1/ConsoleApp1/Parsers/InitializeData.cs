@@ -10,17 +10,28 @@ using System.IO;
 
 namespace GitSteamedDatabase.Parsers
 {
-    public class InitializeData : Parser
+    public class InitializeData
     {
-        public InitializeData(DataManager dataManager) : base(dataManager)
+        private DataManager _dataManager;
+        public InitializeData(DataManager dataManager)
         {
+            _dataManager = dataManager;
         }
 
-        public override void Parse()
+        public void Parse()
         {
-            using(var connection = new SqlConnection(DataManager.Connection))
+            _RunSqlFile("Tables\\CreateTables");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddItem");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddUsers");
+            //_RunSqlFile("Procedures\\AddToDatabase\\AddToLibrary");
+            Console.WriteLine("Initialized database objects");
+        }
+
+        private void _RunSqlFile(string name)
+        {
+            using (var connection = new SqlConnection(_dataManager.Connection))
             {
-                string script = File.ReadAllText(DataManager.QueryLocations + "Tables\\CreateTables.sql");
+                string script = File.ReadAllText(_dataManager.QueryLocations + name + ".sql");
                 Server server = new Server(new ServerConnection(connection));
                 server.ConnectionContext.ExecuteNonQuery(script);
             }
