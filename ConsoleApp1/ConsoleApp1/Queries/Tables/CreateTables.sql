@@ -12,6 +12,10 @@ DROP TABLE IF EXISTS gitSteamed.Users;
 GO
 
 
+DROP TABLE IF EXISTS gitSteamed.ArchivedItems
+GO
+
+
 CREATE TABLE gitSteamed.Users (
 	Username NVARCHAR(64) NOT NULL PRIMARY KEY,
 	ItemCount INT NOT NULL,
@@ -29,8 +33,7 @@ create table gitSteamed.Items
 	Genre nvarchar(128) null,
 	Price float null,
 	[URL] nvarchar(256) null,
-	[Name] nvarchar(128) NULL,
-	Archived DATETIMEOFFSET NULL,
+	[Name] nvarchar(128) NULL
 )
 GO
 
@@ -65,8 +68,7 @@ CREATE TABLE gitSteamed.Reviews (
 	LastEdited DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
 	Helpful INT NULL,
 	Recommend BIT NOT NULL,
-	[Description] NVARCHAR(4000) NOT NULL DEFAULT(N'No text'),
-	Archived DATETIMEOFFSET NULL,
+	[Description] NVARCHAR(4000) NOT NULL DEFAULT(N'No text')
 	/*CONSTRAINT [UK_gitSteamed_Reviews_Username_ItemID] UNIQUE
 	(
 		Username ASC,
@@ -88,5 +90,17 @@ CREATE TABLE gitSteamed.Libraries (
 		Username ASC,
 		ItemId ASC
 	)
+)
+GO
+
+CREATE TABLE gitSteamed.ArchivedItems (
+	ArchivedId INT NOT NULL IDENTITY(1,1),
+	ItemID int not null FOREIGN KEY 
+				REFERENCES gitSteamed.Items(ItemID),
+	Genre nvarchar(128) null,
+	Price float null,
+	[URL] nvarchar(256) null,
+	[Name] nvarchar(128) NULL,
+	Archived DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
 )
 GO
