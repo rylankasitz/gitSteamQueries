@@ -12,6 +12,6 @@ AS
 	MERGE gitSteamed.ArchivedItems AI
 	USING ItemCTE C ON C.ItemId = AI.ItemId
 	WHEN NOT MATCHED THEN
-		INSERT (Username, ItemId, TimePlayedForever, TimePlayed2Weeks)
-		VALUES(@Username, @ItemId, @TimePlayedForever, @TimePlayed2Weeks);
+		INSERT (ItemId, Genre, Price, [Url], [Name])
+		VALUES(C.ItemId, C.Genre, C.Price, C.[Url], C.[Name]);
 GO
