@@ -44,7 +44,7 @@ CREATE TABLE gitSteamed.Genres
 create table gitSteamed.Items
 (
 	ItemID int not null primary key,
-	GenreID INT NOT NULL FOREIGN KEY
+	GenreID INT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Genres(GenreID), 
 	Price float null,
 	[URL] nvarchar(256) null,
