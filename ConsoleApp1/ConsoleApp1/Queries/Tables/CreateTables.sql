@@ -10,6 +10,8 @@ drop table if exists gitSteamed.Bundles
 GO
 DROP TABLE IF EXISTS gitSteamed.Users;
 GO
+DROP TABLE IF EXISTS gitSteamed.Genres;
+GO
 
 
 CREATE TABLE gitSteamed.Users (
@@ -23,10 +25,27 @@ CREATE TABLE gitSteamed.Users (
 )
 GO
 
+CREATE TABLE gitSteamed.Genres
+(
+	GenreID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	[Action] BIT NOT NULL DEFAULT(0),
+	Indie BIT NOT NULL DEFAULT(0),
+	Strategy BIT NOT NULL DEFAULT(0),
+	RPG BIT NOT NULL DEFAULT(0),
+	Casual BIT NOT NULL DEFAULT(0),
+	Simulation BIT NOT NULL DEFAULT(0),
+	EarlyAccess BIT NOT NULL DEFAULT(0),
+	Racing BIT NOT NULL DEFAULT(0),
+	Sports BIT NOT NULL DEFAULT(0),
+	Education BIT NOT NULL DEFAULT(0),
+	Adventure BIT NOT NULL DEFAULT(0)
+)
+
 create table gitSteamed.Items
 (
 	ItemID int not null primary key,
-	Genre nvarchar(128) null,
+	GenreID INT NOT NULL FOREIGN KEY
+								REFERENCES gitSteamed.Genres(GenreID), 
 	Price float null,
 	[URL] nvarchar(256) null,
 	[Name] nvarchar(128) NULL,

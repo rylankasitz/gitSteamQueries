@@ -18,6 +18,7 @@ namespace GitSteamedDatabase.Parsers
         {
             int userCount = 0;
             List<int> addedItems = new List<int>();
+            int genreID = 1;
             foreach(UserItem userItem in DataManager.UserItems)
             {
                 _AddUser(userItem.user_id, userItem.user_url, userItem.items_count);
@@ -26,21 +27,25 @@ namespace GitSteamedDatabase.Parsers
                     BundleItem bundleItem = _GetBundleItem(item.item_name);
                     if (bundleItem != null && !addedItems.Contains(item.item_id))
                     {
-                        _AddItem(item.item_id, item.item_name, bundleItem.item_url, bundleItem.genre, Math.Round(float.Parse(bundleItem.discounted_price.Replace("$", "")), 2));
+                        _AddItem(item.item_id, item.item_name, bundleItem.item_url, genreID, Math.Round(float.Parse(bundleItem.discounted_price.Replace("$", "")), 2));
+                        _AddGenre(bundleItem.genre);
                         addedItems.Add(item.item_id);
+                        genreID++;
                     }
                     else if(!addedItems.Contains(item.item_id))
                     {
-                        _AddItem(item.item_id, item.item_name, null, null, -1);
+                        _AddItem(item.item_id, item.item_name, null, -1, -1);
                         addedItems.Add(item.item_id);
                     }
                     _AddLibrary(userItem.user_id, item.item_id, item.playtime_forever, item.playtime_2weeks);
                 }
                 userCount++;
                 DataManager.DisplayProgress("User Items Progress: ", userCount, DataManager.UserItems.Count, DataManager.UserItems.Count / 1000);
+                if (userCount == 1000) break;
             }
             DataManager.DisplayProgress("User Items Progress: ", 1, 1, 1);
             Console.WriteLine("\nAdded " + userCount + " users");
+            DataManager.AddTable("Genres", DataManager.GenreDataTable);
             DataManager.AddTable("Users", DataManager.UserDataTable);
             DataManager.AddTable("Items", DataManager.ItemDataTable);
             DataManager.AddTable("Libraries", DataManager.LibraryDataTable);
@@ -57,11 +62,11 @@ namespace GitSteamedDatabase.Parsers
             DataManager.UserDataTable.Rows.Add(row);
         }
 
-        private void _AddItem(int itemid, string itemname, string url, string genre, double price)
+        private void _AddItem(int itemid, string itemname, string url, int genre, double price)
         {
             DataRow row = DataManager.ItemDataTable.NewRow();
             row["ItemID"] = itemid;
-            row["Genre"] = genre;
+            if (genre != -1) row["GenreID"] = genre;
             row["URL"] = url;
             row["Name"] = itemname;
             if(price != -1) row["Price"] = price;
@@ -77,6 +82,21 @@ namespace GitSteamedDatabase.Parsers
             row["TimePlayed2Weeks"] = playtime2weeks;
             DataManager.LibraryDataTable.Rows.Add(row);
         }
+
+        private void _AddGenre(string genresStr)
+        {
+            string[] genres = genresStr.Split(", ");
+            DataRow row = DataManager.GenreDataTable.NewRow();
+            foreach (string genre in genres)
+            {
+                if (DataManager.GenreDataTable.Columns.Contains(genre))
+                {
+                    row[genre] = 1;
+                }
+            }
+            DataManager.GenreDataTable.Rows.Add(row);
+        }
+
 
         private BundleItem _GetBundleItem(string itemName)
         {

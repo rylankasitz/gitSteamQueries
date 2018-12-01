@@ -8,8 +8,10 @@ GO
 CREATE OR ALTER PROCEDURE gitSteamed.SearchUser
 	@LookupString NVARCHAR(128),
 	@ResultCount INT,
-	@PageNumber INT
+	@PageNumber INT,
+	@ReturnedCount INT OUTPUT
 AS
+	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Users U WHERE U.Username LIKE (N'%' + @LookupString + N'%'))
 	SELECT U.Username
 	FROM gitSteamed.Users U
 	WHERE U.Username LIKE (N'%' + @LookupString + N'%')
@@ -19,8 +21,10 @@ GO
 CREATE OR ALTER PROCEDURE gitSteamed.SearchItem
 	@LookupString NVARCHAR(128),
 	@ResultCount INT,
-	@PageNumber INT
+	@PageNumber INT,
+	@ReturnedCount INT OUTPUT
 AS
+	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Items I WHERE I.[Name] LIKE (N'%' + @LookupString + N'%'))
 	SELECT I.[Name]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
@@ -32,8 +36,10 @@ GO
 CREATE OR ALTER PROCEDURE gitSteamed.SearchBundle
 	@LookupString NVARCHAR(128),
 	@ResultCount INT,
-	@PageNumber INT
+	@PageNumber INT,
+	@ReturnedCount INT OUTPUT
 AS
+	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Bundles B WHERE B.[Name] LIKE (N'%' + @LookupString + N'%'))
 	SELECT B.[Name]
 	FROM gitSteamed.Bundles B
 		INNER JOIN gitSteamed.BundleContents BC ON BC.BundleID = B.BundleID
@@ -45,6 +51,13 @@ AS
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT @ResultCount ROWS ONLY
 GO
 
-EXEC gitSteamed.SearchItem N'A', 10, 1
-EXEC gitSteamed.SearchUser N'Ca', 10, 1
-EXEC gitSteamed.SearchBundle N'aB', 5, 3
+DECLARE @UserResults INT
+DECLARE @ItemsResults INT
+DECLARE @BundleResults INT
+
+EXEC gitSteamed.SearchItem N'A', 10, 1, @ItemsResults OUTPUT
+SELECT @ItemsResults ItemResults
+EXEC gitSteamed.SearchUser N'Ca', 10, 1, @UserResults OUTPUT
+SELECT @UserResults UserResults
+EXEC gitSteamed.SearchBundle N'aB', 5, 3, @BundleResults OUTPUT
+SELECT @BundleResults BundleResults
