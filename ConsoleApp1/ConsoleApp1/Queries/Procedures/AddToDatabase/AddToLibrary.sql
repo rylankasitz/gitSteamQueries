@@ -1,8 +1,11 @@
-﻿CREATE OR ALTER PROCEDURE gitSteamed.AddLibrary
+﻿DROP PROCEDURE IF EXISTS gitSteamed.AddToUserLibrary
+GO
+
+CREATE OR ALTER PROCEDURE gitSteamed.AddToUserLibrary
 	@Username NVARCHAR(64),
 	@ItemId INT,
-	@TimePlayedForever INT,
-	@TimePlayed2Weeks INT
+	@TimePlayedForever INT = 0,
+	@TimePlayed2Weeks INT = 0
 AS
 
 WITH LibraryCTE(Username, ItemId, TimePlayedForever, TimePlayed2Weeks) AS (
