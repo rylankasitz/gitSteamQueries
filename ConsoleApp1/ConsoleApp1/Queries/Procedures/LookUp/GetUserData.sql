@@ -19,7 +19,7 @@ AS
 	FROM gitSteamed.Users U
 		INNER JOIN gitSteamed.Reviews R ON U.Username = R.Username
 		INNER JOIN gitSteamed.Items I ON I.ItemID = R.ItemID
-	WHERE U.Username = @Username
+	WHERE U.Username = @Username AND R.ReviewID NOT IN (SELECT AR.ReviewID FROM gitSteamed.ArchivedReviews AR)
 	GROUP BY R.[Description], I.[Name], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend, R.ItemID
 	ORDER BY R.LastEdited DESC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
@@ -35,7 +35,7 @@ AS
 	FROM gitSteamed.Users U
 		INNER JOIN gitSteamed.Libraries L ON L.Username = U.Username
 		INNER JOIN gitSteamed.Items I ON I.ItemID = L.ItemID
-	WHERE U.Username = @Username
+	WHERE U.Username = @Username 
 	ORDER BY L.TimePlayedForever DESC, L.TimePlayed2Weeks DESC, I.[Name] ASC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
 GO

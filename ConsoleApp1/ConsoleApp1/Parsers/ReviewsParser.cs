@@ -15,8 +15,8 @@ namespace GitSteamedDatabase.Parsers
         public override void Parse()
         {
             int funny = 0;
-            DateTime posted = DateTime.Now;
-            DateTime lastEdited = DateTime.Now;
+            DateTime posted = DateTime.Parse("05/29/2015");
+            DateTime lastEdited = DateTime.Parse("05/29/2015");
             int helpful = 0;
             int reviewCount = 0;
             foreach (UserReview users in DataManager.UserReviews)
@@ -31,7 +31,7 @@ namespace GitSteamedDatabase.Parsers
                     review.funny = review.funny.Split(" ")[0];
                     review.helpful = review.helpful.Split(" ")[0];
                     if (!Int32.TryParse(review.funny, out funny)) funny = 0;
-                    if (!DateTime.TryParse(review.posted, out posted)) posted = DateTime.Now;
+                    if (!DateTime.TryParse(review.posted, out posted)) posted = DateTime.Parse("05/29/2015");
                     if (!DateTime.TryParse(review.last_edited, out lastEdited)) lastEdited = posted;
                     if (!Int32.TryParse(review.helpful, out helpful)) helpful = 0;        
                      _AddReview(users.user_id, Int32.Parse(review.item_id), funny, posted, lastEdited, helpful, Convert.ToByte(review.recommend), review.review);
