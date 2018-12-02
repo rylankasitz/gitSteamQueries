@@ -1,19 +1,6 @@
-﻿DROP TABLE IF EXISTS gitSteamed.ArchivedItems
+﻿DROP TABLE IF EXISTS gitSteamed.ArchivedReviews
 GO
 
-DROP TABLE IF EXISTS gitSteamed.ArchivedReviews
-GO
-
-CREATE TABLE gitSteamed.ArchivedItems (
-	ArchivedId INT NOT NULL IDENTITY(1,1),
-	ItemID int not null FOREIGN KEY 
-				REFERENCES gitSteamed.Items(ItemID),
-	Price float null,
-	[URL] nvarchar(256) null,
-	[Name] nvarchar(128) NULL,
-	Archived DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
-)
-GO
 
 CREATE TABLE gitSteamed.ArchivedReviews(
 	ArchivedId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
