@@ -4,10 +4,10 @@ GO
 CREATE OR ALTER PROCEDURE gitSteamed.UpdateBundlePrice
 	@BundleID INT,
 	@FinalPrice FLOAT,
-	@DiscountedPrive FLOAT
+	@DiscountedPrice FLOAT
 AS
 	UPDATE gitSteamed.Bundles
-	SET FinalPrice = @FinalPrice, DiscountPrice = @DiscountedPrive
+	SET FinalPrice = @FinalPrice, DiscountPrice = @DiscountedPrice
 	WHERE BundleID = @BundleID
 GO
 
