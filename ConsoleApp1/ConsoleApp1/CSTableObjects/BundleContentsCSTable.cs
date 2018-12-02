@@ -19,6 +19,7 @@ namespace GitSteamedDatabase.CSTableObjects
             BundleContentsID.DataType = System.Type.GetType("System.Int32");
             BundleContentsID.ColumnName = "BundleContentsID";
             BundleContentsID.AutoIncrement = true;
+            BundleContentsID.AutoIncrementSeed = 1;
             table.Columns.Add(BundleContentsID);
 
             DataColumn BundleID = new DataColumn();

@@ -25,7 +25,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.SearchItem
 	@ReturnedCount INT OUTPUT
 AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Items I WHERE I.[Name] LIKE (N'%' + @LookupString + N'%'))
-	SELECT I.[Name]
+	SELECT I.[Name], I.ItemID
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
 	WHERE I.[Name] LIKE (N'%' + @LookupString + N'%')

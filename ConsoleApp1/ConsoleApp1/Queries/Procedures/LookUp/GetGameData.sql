@@ -31,10 +31,9 @@ CREATE OR ALTER PROCEDURE gitSteamed.GetGameBundles
 AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.BundleContents WHERE ItemID = @ItemID)
 	SELECT B.[Name], B.FinalPrice, B.DiscountPrice
-	FROM gitSteamed.Items I
-		INNER JOIN gitSteamed.BundleContents BC ON I.ItemID = BC.ItemID
+	FROM gitSteamed.BundleContents BC 
 		INNER JOIN gitSteamed.Bundles B ON B.BundleID = BC.BundleID
-	WHERE I.ItemID = @ItemID
+	WHERE BC.ItemID = @ItemID
 	ORDER BY B.[Name]
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
 GO
@@ -46,14 +45,24 @@ AS
 		SUM(L.TimePlayedForever / 60) TotalPlayTimeForever, 
 		SUM(L.TimePlayed2Weeks / 60) TotalPlayTime2Weeks
 	FROM gitSteamed.Items I
-		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
+		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID 
 	WHERE I.ItemID = @ItemdID
 	GROUP BY I.ItemID, I.Price
 GO
+CREATE OR ALTER PROCEDURE gitSteamed.GetGameGenres
+	@ItemdID NVARCHAR(64)
+AS
+	SELECT G.[Name]
+	FROM gitSteamed.ItemsGenreContents IC
+		INNER JOIN gitSteamed.Genres G ON G.GenreID = IC.GenreID
+	WHERE IC.ItemID = @ItemdID
+	ORDER BY G.[Name]
+GO
 
 DECLARE @ResultCount INT
-EXEC gitSteamed.GetGameReviews 10, 10, 6, @ResultCount OUTPUT
+EXEC gitSteamed.GetGameReviews 20, 6, 1, @ResultCount OUTPUT
 SELECT @ResultCount
-EXEC gitSteamed.GetGameBundles 10, 10, 6, @ResultCount OUTPUT
+EXEC gitSteamed.GetGameBundles 20, 6, 1, @ResultCount OUTPUT
 SELECT @ResultCount
-EXEC gitSteamed.GetGameStats 10
+EXEC gitSteamed.GetGameStats 20
+EXEC gitSteamed.GetGameGenres 20

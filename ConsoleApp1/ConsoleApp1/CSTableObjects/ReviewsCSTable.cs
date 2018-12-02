@@ -19,6 +19,7 @@ namespace GitSteamedDatabase.CSTableObjects
             ReviewID.DataType = System.Type.GetType("System.Int32");
             ReviewID.ColumnName = "ReviewID";
             ReviewID.AutoIncrement = true;
+            ReviewID.AutoIncrementSeed = 1;
             table.Columns.Add(ReviewID);
 
             DataColumn Username = new DataColumn();

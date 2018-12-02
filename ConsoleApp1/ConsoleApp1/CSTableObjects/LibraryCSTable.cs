@@ -18,6 +18,7 @@ namespace GitSteamedDatabase.CSTableObjects
             DataColumn LibraryID = new DataColumn();
             LibraryID.DataType = System.Type.GetType("System.Int32");
             LibraryID.ColumnName = "LibraryID";
+            LibraryID.AutoIncrementSeed = 1;
             LibraryID.AutoIncrement = true;
             table.Columns.Add(LibraryID);
 

@@ -43,8 +43,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.GetUserStats
 	@Username NVARCHAR(64)
 AS
 	SELECT (SUM(L.TimePlayedForever) / 60) TotalPlayTime, (SUM(L.TimePlayed2Weeks) / 60) PlayTime2Weeks,
-		P.ReviewCount, P.FunnyCount, P.HelpfulCount, P.RecommendedCount, G.[Action], G.Adventure, G.Casual,
-		G.EarlyAccess, G.Education, G.Indie, G.Racing, G.RPG, G.Simulation, G.Sports, G.Startegy	
+		P.ReviewCount, P.FunnyCount, P.HelpfulCount, P.RecommendedCount	
 	FROM gitSteamed.Users U 
 		INNER JOIN gitSteamed.Libraries L ON U.Username = L.Username
 		INNER JOIN 
@@ -53,26 +52,25 @@ AS
 					INNER JOIN gitSteamed.Users U ON U.Username = R.Username
 				GROUP BY U.Username)
 			P(Username, ReviewCount, FunnyCount, HelpfulCount, RecommendedCount) ON U.Username = P.Username
-		INNER JOIN
-			(SELECT SUM(CONVERT(INT, G.[Action])), SUM(CONVERT(INT, G.Adventure)), SUM(CONVERT(INT, G.Casual)), 
-				SUM(CONVERT(INT, G.EarlyAccess)), SUM(CONVERT(INT, G.Education)), SUM(CONVERT(INT, G.Indie)),
-				SUM(CONVERT(INT, G.Racing)),SUM(CONVERT(INT, G.RPG)), SUM(CONVERT(INT, G.Simulation)), 
-				SUM(CONVERT(INT, G.Sports)), SUM(CONVERT(INT, G.Strategy)), L.Username
-				FROM gitSteamed.Genres G 
-					INNER JOIN gitSteamed.Items I ON I.GenreID = G.GenreID
-					INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
-				WHERE I.GenreID IS NOT NULL
-				GROUP BY L.Username)
-			G([Action], Adventure, Casual, EarlyAccess, Education, Indie, Racing, RPG, Simulation, Sports, Startegy, Username)
-				ON U.Username = G.Username
 	WHERE U.Username = @Username
-	GROUP BY U.Username, P.ReviewCount, p.FunnyCount, P.HelpfulCount, P.RecommendedCount, G.[Action], G.Adventure, G.Casual,
-		G.EarlyAccess, G.Education, G.Indie, G.Racing, G.RPG, G.Simulation, G.Sports, G.Startegy
+	GROUP BY U.Username, P.ReviewCount, p.FunnyCount, P.HelpfulCount, P.RecommendedCount
+GO
+CREATE OR ALTER PROCEDURE gitSteamed.GetUserGenreLayout
+	@Username NVARCHAR(64)
+AS
+	SELECT G.[Name], COUNT(*) GenreCount
+	FROM gitSteamed.Libraries L
+		INNER JOIN gitSteamed.ItemsGenreContents IG ON L.ItemID = IG.ItemID
+		INNER JOIN gitSteamed.Genres G ON G.GenreID = IG.GenreID
+	WHERE L.Username = @Username
+	GROUP BY G.GenreID, G.[Name]
+	ORDER BY GenreCount DESC
 GO
 
 DECLARE @ResultCount INT
-EXEC gitSteamed.GetUserReviews N'chicken_tonight', 10, 1, @ResultCount OUTPUT
+EXEC gitSteamed.GetUserReviews N'REBAS_AS_F-T', 10, 1, @ResultCount OUTPUT
 SELECT @ResultCount ReviewsCount
-EXEC gitSteamed.GetUserGames N'chicken_tonight', 72, 1, @ResultCount OUTPUT
+EXEC gitSteamed.GetUserGames N'REBAS_AS_F-T', 72, 1, @ResultCount OUTPUT
 SELECT @ResultCount GamesCount
-EXEC gitSteamed.GetUserStats N'chicken_tonight'
+EXEC gitSteamed.GetUserStats N'REBAS_AS_F-T'
+EXEC gitSteamed.GetUserGenreLayout N'REBAS_AS_F-T'
