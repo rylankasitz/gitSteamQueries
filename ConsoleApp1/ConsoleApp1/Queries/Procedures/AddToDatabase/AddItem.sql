@@ -1,23 +1,23 @@
-﻿CREATE OR ALTER PROCEDURE gitSteamed.AddItem
-	@genre NVARCHAR(64) = NULL,
-	@price FLOAT,
-	@url NVARCHAR(256) = NULL,
-	@name NVARCHAR(64)
-AS
+﻿DROP PROCEDURE IF EXISTS gitSteamed.AddItem
+GO
 
-WITH ItemCTE(Genre, Price, URL, Name) AS (
-	SELECT *
-	FROM (VALUES(@genre, @price, @url, @name)) AS P(Genre, Price, URL, Name)
-)
-MERGE gitSteamed.Items I
-USING ItemCTE C ON	C.Name = I.Name
-WHEN MATCHED THEN
-	UPDATE SET
-		I.Genre = ISNULL(@genre, I.Genre),
-		I.Price = ISNULL(@price, I.Price),
-		I.URL = ISNULL(@url, I.URL),
-		I.Name = @name
+CREATE OR ALTER PROCEDURE gitSteamed.AddItem
+	@price FLOAT,
+	@name NVARCHAR(128),
+	@url NVARCHAR(256) = NULL,
+	@added INT OUT
+AS
+	DECLARE @ID INT = (SELECT TOP(1) I.ItemID FROM gitSteamed.Items I ORDER BY I.ItemID DESC) + 1;
+	DECLARE @row_before INT = (SELECT COUNT(*) FROM gitSteamed.Items);
+	WITH ItemCTE(Price, URL, Name) AS (
+		SELECT P.Price, P.URL, P.Name
+		FROM (VALUES(@price, @url, @name)) AS P(Price, URL, Name)
+	)
+	MERGE gitSteamed.Items I
+	USING ItemCTE C ON	C.Name = I.Name
+
 	WHEN NOT MATCHED THEN
-		INSERT (Genre, Price, [URL], [Name])
-		VALUES (@genre, @price, @url, @name);
+		INSERT (ItemID, Price, [URL], [Name])
+		VALUES (@ID, @price, @url, @name);
+	SET @added = (SELECT COUNT(*) FROM gitSteamed.Items) - @row_before;
 GO

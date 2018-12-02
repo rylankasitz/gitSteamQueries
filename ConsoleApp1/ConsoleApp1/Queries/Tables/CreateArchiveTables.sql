@@ -8,7 +8,6 @@ CREATE TABLE gitSteamed.ArchivedItems (
 	ArchivedId INT NOT NULL IDENTITY(1,1),
 	ItemID int not null FOREIGN KEY 
 				REFERENCES gitSteamed.Items(ItemID),
-	Genre nvarchar(128) null,
 	Price float null,
 	[URL] nvarchar(256) null,
 	[Name] nvarchar(128) NULL,
@@ -17,8 +16,8 @@ CREATE TABLE gitSteamed.ArchivedItems (
 GO
 
 CREATE TABLE gitSteamed.ArchivedReviews(
-	ArchivedId INT NOT NULL IDENTITY(1,1),
-	ReviewID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	ArchivedId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	ReviewID INT NOT NULL FOREIGN KEY REFERENCES gitSteamed.Reviews(ReviewID),
 	Username NVARCHAR(64) NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Users(Username),
 	ItemID INT NOT NULL FOREIGN KEY
