@@ -23,7 +23,7 @@ AS
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Reviews R ON I.ItemID = R.ItemID
 		INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
-	WHERE I.ItemID = @ItemID
+	WHERE I.ItemID = @ItemID AND R.ReviewID NOT IN (SELECT AR.ReviewID FROM gitSteamed.ArchivedReviews AR)
 	GROUP BY R.[Description], R.Username, Posted, LastEdited, R.Funny, R.Helpful, R.Recommend
 	ORDER BY R.Funny DESC, R.Helpful DESC, R.LastEdited DESC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
