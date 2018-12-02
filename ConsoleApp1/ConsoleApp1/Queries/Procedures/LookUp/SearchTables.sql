@@ -28,7 +28,7 @@ AS
 	SELECT I.[Name], I.ItemID
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
-	WHERE I.[Name] LIKE (N'%' + @LookupString + N'%') AND I.ItemID NOT IN (SELECT AI.ItemID FROM gitSteamed.ArchivedItems AI)
+	WHERE I.[Name] LIKE (N'%' + @LookupString + N'%')
 	GROUP BY I.ItemID, I.[Name]
 	ORDER BY (CASE WHEN I.[Name] LIKE (@LookupString + N'%') THEN 1 ELSE 2 END), COUNT(L.UserName) DESC 
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT @ResultCount ROWS ONLY

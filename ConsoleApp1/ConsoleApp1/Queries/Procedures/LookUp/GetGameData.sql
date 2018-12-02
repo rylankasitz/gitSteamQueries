@@ -70,12 +70,12 @@ AS
 	GROUP BY I.ItemID, I.Price, I.[URL]
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetGameGenres
-	@ItemdID NVARCHAR(64)
+	@ItemID NVARCHAR(64)
 AS
 	SELECT G.[Name]
 	FROM gitSteamed.ItemsGenreContents IC
 		INNER JOIN gitSteamed.Genres G ON G.GenreID = IC.GenreID
-	WHERE IC.ItemID = @ItemdID
+	WHERE IC.ItemID = @ItemID
 	ORDER BY G.[Name]
 GO
 
