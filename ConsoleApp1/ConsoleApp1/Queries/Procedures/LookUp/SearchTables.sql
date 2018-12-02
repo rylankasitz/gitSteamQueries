@@ -40,7 +40,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.SearchBundle
 	@ReturnedCount INT OUTPUT
 AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Bundles B WHERE B.[Name] LIKE (N'%' + @LookupString + N'%'))
-	SELECT B.[Name]
+	SELECT B.[Name], B.BundleID
 	FROM gitSteamed.Bundles B
 		INNER JOIN gitSteamed.BundleContents BC ON BC.BundleID = B.BundleID
 		INNER JOIN gitSteamed.Items I ON I.ItemID = BC.ItemID

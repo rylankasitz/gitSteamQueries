@@ -15,12 +15,12 @@ AS
 									GROUP BY R.Username, R.[Description], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend) R
 							WHERE R.Username = @Username GROUP BY R.Username) 
 	SELECT R.[Description], I.[Name] Game, FORMAT(R.Posted, N'MMMM dd, yyyy') PostedOn, FORMAT(R.LastEdited, N'MMMM dd, yyyy') LastEdited, 
-		R.Funny, R.Helpful, R.Recommend
+		R.Funny, R.Helpful, R.Recommend, R.ItemID
 	FROM gitSteamed.Users U
 		INNER JOIN gitSteamed.Reviews R ON U.Username = R.Username
 		INNER JOIN gitSteamed.Items I ON I.ItemID = R.ItemID
 	WHERE U.Username = @Username
-	GROUP BY R.[Description], I.[Name], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend
+	GROUP BY R.[Description], I.[Name], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend, R.ItemID
 	ORDER BY R.LastEdited DESC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
 GO
@@ -43,7 +43,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.GetUserStats
 	@Username NVARCHAR(64)
 AS
 	SELECT (SUM(L.TimePlayedForever) / 60) TotalPlayTime, (SUM(L.TimePlayed2Weeks) / 60) PlayTime2Weeks,
-		P.ReviewCount, P.FunnyCount, P.HelpfulCount, P.RecommendedCount	
+		P.ReviewCount, P.FunnyCount, P.HelpfulCount, P.RecommendedCount, U.[Url]	
 	FROM gitSteamed.Users U 
 		INNER JOIN gitSteamed.Libraries L ON U.Username = L.Username
 		INNER JOIN 
@@ -53,7 +53,7 @@ AS
 				GROUP BY U.Username)
 			P(Username, ReviewCount, FunnyCount, HelpfulCount, RecommendedCount) ON U.Username = P.Username
 	WHERE U.Username = @Username
-	GROUP BY U.Username, P.ReviewCount, p.FunnyCount, P.HelpfulCount, P.RecommendedCount
+	GROUP BY U.Username, P.ReviewCount, p.FunnyCount, P.HelpfulCount, P.RecommendedCount, U.[Url]
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetUserGenreLayout
 	@Username NVARCHAR(64)

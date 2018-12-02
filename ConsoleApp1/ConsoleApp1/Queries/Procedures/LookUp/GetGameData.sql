@@ -2,7 +2,11 @@ DROP PROCEDURE IF EXISTS gitSteamed.GetGameReviews
 GO
 DROP PROCEDURE IF EXISTS gitSteamed.GetGameBundles
 GO
+DROP PROCEDURE IF EXISTS gitSteamed.GetGameUsers
+GO
 DROP PROCEDURE IF EXISTS gitSteamed.GetGameStats
+GO
+DROP PROCEDURE IF EXISTS gitSteamed.GetGameGenres
 GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.GetGameReviews
@@ -14,13 +18,28 @@ AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM (SELECT R.ItemID FROM gitSteamed.Reviews R
 								GROUP BY R.ItemID, R.[Description], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend) R
 							WHERE R.ItemID = @ItemID GROUP BY R.ItemID) 
-	SELECT R.[Description], I.[Name] Game, FORMAT(R.Posted, N'MMMM dd, yyyy') PostedOn, FORMAT(R.LastEdited, N'MMMM dd, yyyy') LastEdited, 
+	SELECT R.[Description], R.Username, FORMAT(R.Posted, N'MMMM dd, yyyy') PostedOn, FORMAT(R.LastEdited, N'MMMM dd, yyyy') LastEdited, 
 		R.Funny, R.Helpful, R.Recommend
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Reviews R ON I.ItemID = R.ItemID
+		INNER JOIN gitSteamed.Libraries L ON L.ItemID = I.ItemID
 	WHERE I.ItemID = @ItemID
-	GROUP BY R.[Description], I.[Name], Posted, LastEdited, R.Funny, R.Helpful, R.Recommend
-	ORDER BY R.LastEdited DESC
+	GROUP BY R.[Description], R.Username, Posted, LastEdited, R.Funny, R.Helpful, R.Recommend
+	ORDER BY R.Funny DESC, R.Helpful DESC, R.LastEdited DESC
+	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
+GO
+CREATE OR ALTER PROCEDURE gitSteamed.GetGameUsers
+	@ItemID INT,
+	@ResultCount INT,
+	@PageNumber INT,
+	@ReturnedCount INT OUTPUT
+AS
+	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Libraries WHERE ItemID = @ItemID)
+	SELECT U.Username, (L.TimePlayedForever / 60) TimePlayedForever, (L.TimePlayed2Weeks / 60) TimePlayed2Weeks
+	FROM gitSteamed.Users U 
+		INNER JOIN gitSteamed.Libraries L ON U.Username = L.Username
+	WHERE L.ItemID = @ItemID
+	ORDER BY L.TimePlayedForever DESC, L.TimePlayed2Weeks DESC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetGameBundles
@@ -38,16 +57,17 @@ AS
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT (CASE WHEN (@ResultCount = 0) THEN @ReturnedCount ELSE @ResultCount END) ROWS ONLY
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetGameStats
-	@ItemdID NVARCHAR(64)
+	@ItemID NVARCHAR(64)
 AS
 	SELECT I.Price, COUNT(L.Username) UsersOwned, 
 		SUM(CASE WHEN (L.TimePlayedForever != 0) THEN 1 ELSE 0 END) UsersPlayed,
+		SUM(CASE WHEN (L.TimePlayed2Weeks != 0) THEN 1 ELSE 0 END) UsersActive,
 		SUM(L.TimePlayedForever / 60) TotalPlayTimeForever, 
-		SUM(L.TimePlayed2Weeks / 60) TotalPlayTime2Weeks
+		SUM(L.TimePlayed2Weeks / 60) TotalPlayTime2Weeks, I.[URL]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID 
-	WHERE I.ItemID = @ItemdID
-	GROUP BY I.ItemID, I.Price
+	WHERE I.ItemID = @ItemID
+	GROUP BY I.ItemID, I.Price, I.[URL]
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetGameGenres
 	@ItemdID NVARCHAR(64)
@@ -60,7 +80,9 @@ AS
 GO
 
 DECLARE @ResultCount INT
-EXEC gitSteamed.GetGameReviews 20, 6, 1, @ResultCount OUTPUT
+EXEC gitSteamed.GetGameReviews 20, 60, 1, @ResultCount OUTPUT
+SELECT @ResultCount
+EXEC gitSteamed.GetGameUsers 20, 10, 1, @ResultCount OUTPUT
 SELECT @ResultCount
 EXEC gitSteamed.GetGameBundles 20, 6, 1, @ResultCount OUTPUT
 SELECT @ResultCount
