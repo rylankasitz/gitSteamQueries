@@ -3,7 +3,7 @@ GO
 
 
 CREATE TABLE gitSteamed.ArchivedReviews(
-	ArchivedId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	ArchivedID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	ReviewID INT NOT NULL FOREIGN KEY REFERENCES gitSteamed.Reviews(ReviewID),
 	Username NVARCHAR(64) NOT NULL FOREIGN KEY
 								REFERENCES gitSteamed.Users(Username),

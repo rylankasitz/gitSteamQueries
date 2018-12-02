@@ -5,8 +5,8 @@ GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.AddUser
 	@username NVARCHAR(64),
-	@itemcount INT,
-	@url NVARCHAR(256),
+	@itemcount INT = 0,
+	@url NVARCHAR(256) = NULL,
 	@added INT OUT
 AS
 BEGIN
