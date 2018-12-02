@@ -20,4 +20,5 @@ AS
 GO
 
 EXEC gitSteamed.AddGenreToItem N'Software', 10
-EXEC gitSteamed.GetGameGenres 10
+EXEC gitSteamed.AddGenreToItem N'Weeb', 333600
+EXEC gitSteamed.GetGameGenres 333600
