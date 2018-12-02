@@ -4,11 +4,15 @@ DROP TABLE IF EXISTS gitSteamed.Libraries;
 GO
 DROP TABLE IF EXISTS gitSteamed.Reviews;
 GO
+DROP TABLE IF EXISTS gitSteamed.ItemsGenreContents;
+GO
 drop table if exists gitSteamed.Items
 GO
 drop table if exists gitSteamed.Bundles
 GO
 DROP TABLE IF EXISTS gitSteamed.Users;
+GO
+DROP TABLE IF EXISTS gitSteamed.Genres;
 GO
 
 
@@ -24,15 +28,34 @@ CREATE TABLE gitSteamed.Users (
 )
 GO
 
+CREATE TABLE gitSteamed.Genres
+(
+	GenreID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	[Name] NVARCHAR(32) NOT NULL
+)
+
 create table gitSteamed.Items
 (
 	ItemID int not null primary key,
-	Genre nvarchar(128) null,
 	Price float null,
 	[URL] nvarchar(256) null,
 	[Name] nvarchar(128) NULL
 )
 GO
+
+CREATE TABLE gitSteamed.ItemsGenreContents
+(
+	ItemsGenreID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	GenreID INT NULL FOREIGN KEY REFERENCES gitSteamed.Genres(GenreID),
+	ItemID INT NULL FOREIGN KEY REFERENCES gitSteamed.Items(ItemID), 
+	CONSTRAINT [UK_gitSteamed_Genres_Items] UNIQUE
+	(
+		GenreID ASC,
+		ItemID ASC
+	)
+)
+
+
 
 create table gitSteamed.Bundles
 (

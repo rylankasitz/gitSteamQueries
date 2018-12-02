@@ -20,11 +20,6 @@ namespace GitSteamedDatabase.CSTableObjects
             ItemID.ColumnName = "ItemID";
             table.Columns.Add(ItemID);
 
-            DataColumn Genre = new DataColumn();
-            Genre.DataType = System.Type.GetType("System.String");
-            Genre.ColumnName = "Genre";
-            table.Columns.Add(Genre);
-
             DataColumn Price = new DataColumn();
             Price.DataType = System.Type.GetType("System.Double");
             Price.ColumnName = "Price";
@@ -39,11 +34,6 @@ namespace GitSteamedDatabase.CSTableObjects
             Name.DataType = System.Type.GetType("System.String");
             Name.ColumnName = "Name";
             table.Columns.Add(Name);
-
-            DataColumn Archived = new DataColumn();
-            Archived.DataType = System.Type.GetType("System.DateTime");
-            Archived.ColumnName = "Archived";
-            table.Columns.Add(Archived);
 
             table.AcceptChanges();
             DataManager.ItemDataTable = table;

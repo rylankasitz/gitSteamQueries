@@ -21,7 +21,9 @@ namespace GitSteamedDatabase
         public DataTable BundleDataTable { get; set; }
         public DataTable BundleContentsDataTable { get; set; }
         public DataTable ReviewsDataTable { get; set; }
-        public string Connection { get; } = "Server=tcp:70.179.161.243;Database=master;User Id=rylan;Password=sqlgod";
+        public DataTable GenreDataTable { get; set; }
+        public DataTable GenreContentsTable { get; set; }
+        public string Connection { get; } = "Server=tcp:70.179.161.243,5000;Database=master;User Id=rylan;Password=sqlgod";
         public string QueryLocations { get; set; } = "..\\..\\..\\Queries\\";
 
         public DataManager()

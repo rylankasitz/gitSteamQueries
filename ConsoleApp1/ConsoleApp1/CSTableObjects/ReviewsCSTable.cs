@@ -19,6 +19,7 @@ namespace GitSteamedDatabase.CSTableObjects
             ReviewID.DataType = System.Type.GetType("System.Int32");
             ReviewID.ColumnName = "ReviewID";
             ReviewID.AutoIncrement = true;
+            ReviewID.AutoIncrementSeed = 1;
             table.Columns.Add(ReviewID);
 
             DataColumn Username = new DataColumn();
@@ -64,11 +65,6 @@ namespace GitSteamedDatabase.CSTableObjects
             Description.DataType = System.Type.GetType("System.String");
             Description.ColumnName = "Description";
             table.Columns.Add(Description);
-
-            DataColumn Archived = new DataColumn();
-            Archived.DataType = System.Type.GetType("System.DateTime");
-            Archived.ColumnName = "Archived";
-            table.Columns.Add(Archived);
 
             table.AcceptChanges();
             DataManager.ReviewsDataTable = table;
