@@ -41,7 +41,6 @@ namespace GitSteamedDatabase.Parsers
                 }
                 userCount++;
                 DataManager.DisplayProgress("User Items Progress: ", userCount, DataManager.UserItems.Count, DataManager.UserItems.Count / 1000);
-                if (userCount == 1000) break;
             }
             DataManager.DisplayProgress("User Items Progress: ", 1, 1, 1);
             Console.WriteLine("\nAdded " + userCount + " users");

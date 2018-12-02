@@ -65,11 +65,6 @@ namespace GitSteamedDatabase.CSTableObjects
             Description.ColumnName = "Description";
             table.Columns.Add(Description);
 
-            DataColumn Archived = new DataColumn();
-            Archived.DataType = System.Type.GetType("System.DateTime");
-            Archived.ColumnName = "Archived";
-            table.Columns.Add(Archived);
-
             table.AcceptChanges();
             DataManager.ReviewsDataTable = table;
         }

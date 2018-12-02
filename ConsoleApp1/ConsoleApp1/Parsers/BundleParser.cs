@@ -28,7 +28,6 @@ namespace GitSteamedDatabase.Parsers
                 }
                 DataManager.DisplayProgress("Bundle Progress: ", bundleCount, DataManager.Bundles.Count, 1);
                 bundleCount++;
-                break;
             }
             DataManager.DisplayProgress("Bundle Progress: ", 1, 1, 1);
             Console.WriteLine("\nAdded " + bundleCount + " Bundles");
