@@ -28,7 +28,7 @@ namespace GitSteamedDatabase.Parsers
                     if (bundleItem != null && !addedItems.Contains(item.item_id))
                     {
                         _AddItem(item.item_id, item.item_name, bundleItem.item_url, genreID, Math.Round(float.Parse(bundleItem.discounted_price.Replace("$", "")), 2));
-                        _AddGenre(bundleItem.genre);
+                        _AddGenreContents(bundleItem.genre, item.item_id);
                         addedItems.Add(item.item_id);
                         genreID++;
                     }
@@ -43,10 +43,11 @@ namespace GitSteamedDatabase.Parsers
                 DataManager.DisplayProgress("User Items Progress: ", userCount, DataManager.UserItems.Count, DataManager.UserItems.Count / 1000);
             }
             DataManager.DisplayProgress("User Items Progress: ", 1, 1, 1);
-            Console.WriteLine("\nAdded " + userCount + " users");
+            Console.WriteLine("\nAdded " + userCount + " users"); 
             DataManager.AddTable("Genres", DataManager.GenreDataTable);
             DataManager.AddTable("Users", DataManager.UserDataTable);
             DataManager.AddTable("Items", DataManager.ItemDataTable);
+            DataManager.AddTable("ItemsGenreContents", DataManager.GenreContentsTable);
             DataManager.AddTable("Libraries", DataManager.LibraryDataTable);
         }
 
@@ -65,7 +66,6 @@ namespace GitSteamedDatabase.Parsers
         {
             DataRow row = DataManager.ItemDataTable.NewRow();
             row["ItemID"] = itemid;
-            if (genre != -1) row["GenreID"] = genre;
             row["URL"] = url;
             row["Name"] = itemname;
             if(price != -1) row["Price"] = price;
@@ -82,20 +82,25 @@ namespace GitSteamedDatabase.Parsers
             DataManager.LibraryDataTable.Rows.Add(row);
         }
 
-        private void _AddGenre(string genresStr)
+        private void _AddGenreContents(string genreName, int itemID)
         {
-            string[] genres = genresStr.Split(", ");
-            DataRow row = DataManager.GenreDataTable.NewRow();
-            foreach (string genre in genres)
+            string[] genres = new string[1];
+            if (genreName.Contains(", ")) genres = genreName.Split(", ");
+            else genres[0] = genreName;
+            foreach (string g in genres)
             {
-                if (DataManager.GenreDataTable.Columns.Contains(genre))
+                foreach (DataRow dataRow in DataManager.GenreDataTable.Rows)
                 {
-                    row[genre] = 1;
+                    if (dataRow["Name"].ToString() == g)
+                    {
+                        DataRow row = DataManager.GenreContentsTable.NewRow();
+                        row["GenreID"] = dataRow["GenreID"];
+                        row["ItemID"] = itemID;
+                        DataManager.GenreContentsTable.Rows.Add(row);
+                    }
                 }
-            }
-            DataManager.GenreDataTable.Rows.Add(row);
+            }    
         }
-
 
         private BundleItem _GetBundleItem(string itemName)
         {

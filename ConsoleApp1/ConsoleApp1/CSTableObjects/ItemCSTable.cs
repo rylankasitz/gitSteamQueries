@@ -20,11 +20,6 @@ namespace GitSteamedDatabase.CSTableObjects
             ItemID.ColumnName = "ItemID";
             table.Columns.Add(ItemID);
 
-            DataColumn GenreID = new DataColumn();
-            GenreID.DataType = System.Type.GetType("System.Int32");
-            GenreID.ColumnName = "GenreID";
-            table.Columns.Add(GenreID);
-
             DataColumn Price = new DataColumn();
             Price.DataType = System.Type.GetType("System.Double");
             Price.ColumnName = "Price";

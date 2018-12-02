@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS gitSteamed.Libraries;
 GO
 DROP TABLE IF EXISTS gitSteamed.Reviews;
 GO
+DROP TABLE IF EXISTS gitSteamed.ItemsGenreContents;
+GO
 drop table if exists gitSteamed.Items
 GO
 drop table if exists gitSteamed.Bundles
@@ -29,29 +31,31 @@ GO
 CREATE TABLE gitSteamed.Genres
 (
 	GenreID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
-	[Action] BIT NOT NULL DEFAULT(0),
-	Indie BIT NOT NULL DEFAULT(0),
-	Strategy BIT NOT NULL DEFAULT(0),
-	RPG BIT NOT NULL DEFAULT(0),
-	Casual BIT NOT NULL DEFAULT(0),
-	Simulation BIT NOT NULL DEFAULT(0),
-	EarlyAccess BIT NOT NULL DEFAULT(0),
-	Racing BIT NOT NULL DEFAULT(0),
-	Sports BIT NOT NULL DEFAULT(0),
-	Education BIT NOT NULL DEFAULT(0),
-	Adventure BIT NOT NULL DEFAULT(0)
+	[Name] NVARCHAR(32) NOT NULL
 )
 
 create table gitSteamed.Items
 (
 	ItemID int not null primary key,
-	GenreID INT NULL FOREIGN KEY
-								REFERENCES gitSteamed.Genres(GenreID), 
 	Price float null,
 	[URL] nvarchar(256) null,
 	[Name] nvarchar(128) NULL
 )
 GO
+
+CREATE TABLE gitSteamed.ItemsGenreContents
+(
+	ItemsGenreID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	GenreID INT NULL FOREIGN KEY REFERENCES gitSteamed.Genres(GenreID),
+	ItemID INT NULL FOREIGN KEY REFERENCES gitSteamed.Items(ItemID), 
+	CONSTRAINT [UK_gitSteamed_Genres_Items] UNIQUE
+	(
+		GenreID ASC,
+		ItemID ASC
+	)
+)
+
+
 
 create table gitSteamed.Bundles
 (
