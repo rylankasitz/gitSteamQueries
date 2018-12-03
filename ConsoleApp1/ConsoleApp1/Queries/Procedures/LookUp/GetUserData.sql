@@ -70,7 +70,7 @@ GO
 DECLARE @ResultCount INT
 EXEC gitSteamed.GetUserReviews N'REBAS_AS_F-T', 10, 1, @ResultCount OUTPUT
 SELECT @ResultCount ReviewsCount
-EXEC gitSteamed.GetUserGames N'REBAS_AS_F-T', 72, 1, @ResultCount OUTPUT
+EXEC gitSteamed.GetUserGames N'REBAS_AS_F-T', 10, 1, @ResultCount OUTPUT
 SELECT @ResultCount GamesCount
 EXEC gitSteamed.GetUserStats N'REBAS_AS_F-T'
 EXEC gitSteamed.GetUserGenreLayout N'REBAS_AS_F-T'
