@@ -49,7 +49,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.GetGameBundles
 	@ReturnedCount INT OUTPUT
 AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.BundleContents WHERE ItemID = @ItemID)
-	SELECT B.[Name], B.FinalPrice, B.DiscountPrice
+	SELECT B.[Name], B.FinalPrice, B.DiscountPrice, B.BundleID
 	FROM gitSteamed.BundleContents BC 
 		INNER JOIN gitSteamed.Bundles B ON B.BundleID = BC.BundleID
 	WHERE BC.ItemID = @ItemID
