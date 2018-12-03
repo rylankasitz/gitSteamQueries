@@ -37,14 +37,6 @@ AS
 	GROUP BY I.ItemID, I.[Name]
 	ORDER BY COUNT(L.Username) DESC
 GO
-CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemOwners
-AS
-	SELECT TOP 10 I.[Name]
-	FROM gitSteamed.Items I
-		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
-	GROUP BY I.ItemID, I.[Name]
-	ORDER BY COUNT(L.Username) DESC
-GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemUsers
 AS
 	SELECT TOP 10 I.[Name]
@@ -53,9 +45,18 @@ AS
 	GROUP BY I.ItemID, I.[Name]
 	ORDER BY SUM(CASE WHEN (L.TimePlayedForever != 0) THEN 1 ELSE 0 END) DESC
 GO
+CREATE OR ALTER PROCEDURE gitSteamed.GetTop10RecommendedGames
+AS
+	SELECT TOP 10 I.[Name], SUM(CONVERT(INT, R.Recommend)) - SUM(CASE WHEN (R.Recommend = 0) THEN 1 ELSE 0 END) Recommended
+	FROM gitSteamed.Items I
+		INNER JOIN gitSteamed.Reviews R ON R.ItemID = I.ItemID
+	GROUP BY I.[Name]
+	ORDER BY SUM(CONVERT(INT, R.Recommend)) - SUM(CASE WHEN (R.Recommend = 0) THEN 1 ELSE 0 END) DESC
+GO
 
 EXEC gitSteamed.GetTop10ItemsPlaytime
 EXEC gitSteamed.GetTop10UsersPlaytime
 EXEC gitSteamed.GetTop10ItemsReviews
 EXEC gitSteamed.GetTop10ItemOwners
 EXEC gitSteamed.GetTop10ItemUsers
+EXEC gitSteamed.GetTop10RecommendedGames

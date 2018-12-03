@@ -3,13 +3,18 @@ GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.UpdateBundlePrice
 	@BundleID INT,
-	@FinalPrice FLOAT,
-	@DiscountedPrice FLOAT
+	@DiscountedPrice FLOAT,
+	@Valid INT OUTPUT
 AS
+	SET @Valid = 1
+	DECLARE @FinalPrice FLOAT = (SELECT FinalPrice FROM gitSteamed.Bundles WHERE BundleID = @BundleID)
 	UPDATE gitSteamed.Bundles
-	SET FinalPrice = @FinalPrice, DiscountPrice = @DiscountedPrice
-	WHERE BundleID = @BundleID
+	SET DiscountPrice = @DiscountedPrice
+	WHERE BundleID = @BundleID AND @DiscountedPrice < @FinalPrice
+	IF (@DiscountedPrice > @FinalPrice) SET @Valid = 0;
 GO
 
-EXEC gitSteamed.UpdateBundlePrice 1208, 5000, 5000
+DECLARE @out INT
+EXEC gitSteamed.UpdateBundlePrice 1208, 6000, @out OUTPUT
+SELECT @out
 EXEC gitSteamed.GetBundleStats 1208
