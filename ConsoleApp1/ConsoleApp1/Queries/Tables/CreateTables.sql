@@ -2,6 +2,8 @@
 GO
 DROP TABLE IF EXISTS gitSteamed.Libraries;
 GO
+DROP TABLE IF EXISTS gitSteamed.ArchivedReviews
+GO
 DROP TABLE IF EXISTS gitSteamed.Reviews;
 GO
 DROP TABLE IF EXISTS gitSteamed.ItemsGenreContents;
@@ -14,6 +16,7 @@ DROP TABLE IF EXISTS gitSteamed.Users;
 GO
 DROP TABLE IF EXISTS gitSteamed.Genres;
 GO
+
 
 
 
@@ -96,6 +99,22 @@ CREATE TABLE gitSteamed.Reviews (
 	)*/
 )
 GO
+
+CREATE TABLE gitSteamed.ArchivedReviews(
+	ArchivedID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	ReviewID INT NOT NULL FOREIGN KEY REFERENCES gitSteamed.Reviews(ReviewID),
+	Username NVARCHAR(64) NOT NULL FOREIGN KEY
+								REFERENCES gitSteamed.Users(Username),
+	ItemID INT NOT NULL FOREIGN KEY
+								REFERENCES gitSteamed.Items(ItemID),
+	Funny INT NOT NULL DEFAULT(0),
+	Posted DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+	LastEdited DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET()),
+	Helpful INT NULL,
+	Recommend BIT NOT NULL,
+	[Description] NVARCHAR(4000) NOT NULL DEFAULT(N'No text'),
+	Archived DATETIMEOFFSET NOT NULL DEFAULT(SYSDATETIMEOFFSET())
+)
 
 CREATE TABLE gitSteamed.Libraries (
 	LibraryID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,

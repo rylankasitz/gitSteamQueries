@@ -13,6 +13,14 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Queries\Procedures\RemoveFromDatabase\**" />
+    <Compile Remove="Queries\Triggers\**" />
+    <EmbeddedResource Remove="Queries\Procedures\RemoveFromDatabase\**" />
+    <EmbeddedResource Remove="Queries\Triggers\**" />
+    <None Remove="Queries\Procedures\RemoveFromDatabase\**" />
+    <None Remove="Queries\Triggers\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Scripting" Version="11.0.2100.61" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="140.17283.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -22,10 +30,6 @@
     <Reference Include="System.Data">
       <HintPath>System.Data</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Queries\Triggers\" />
-    <Folder Include="Queries\Procedures\RemoveFromDatabase\" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup Condition="$(VisualStudioVersion) == '15.0'">

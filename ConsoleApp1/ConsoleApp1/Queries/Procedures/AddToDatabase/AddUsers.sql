@@ -19,8 +19,8 @@ BEGIN
 	MERGE gitSteamed.Users U
 	USING UserCTE C ON	C.Username = U.Username
 	WHEN NOT MATCHED THEN
-			INSERT (Username, ItemCount, [Url])
-			VALUES(@username, @itemcount, @url);
+		INSERT (Username, ItemCount, [Url])
+		VALUES(@username, @itemcount, @url);
 	SET @added = (SELECT COUNT(*) FROM gitSteamed.Users) - @row_before;
 END
 GO
@@ -31,4 +31,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.AddAdmin
 AS
 	INSERT gitSteamed.Admin(Username, Password)
 	VALUES (@username, @password)
+GO
 
+SELECT *
+FROM gitSteamed.[Admin]

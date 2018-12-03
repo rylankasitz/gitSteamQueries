@@ -19,7 +19,7 @@ namespace GitSteamedDatabase.CSTableObjects
             GenreID.DataType = System.Type.GetType("System.Int32");
             GenreID.ColumnName = "GenreID";
             GenreID.AutoIncrement = true;
-            GenreID.AutoIncrementSeed = 1
+            GenreID.AutoIncrementSeed = 1;
             table.Columns.Add(GenreID);
 
             DataColumn Name = new DataColumn();

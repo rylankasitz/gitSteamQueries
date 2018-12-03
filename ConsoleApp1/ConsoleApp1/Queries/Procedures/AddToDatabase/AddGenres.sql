@@ -22,3 +22,5 @@ GO
 EXEC gitSteamed.GetUserGames N'REBAS_AS_F-T', 10, 3, 0
 EXEC gitSteamed.AddGenreToItem N'Weeb', 462990
 EXEC gitSteamed.GetGenreTotals
+
+SELECT * FROM gitSteamed.Items WHERE [Name] = N'test200'

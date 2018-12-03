@@ -10,7 +10,7 @@ CREATE OR ALTER PROCEDURE gitSteamed.SearchReview
 	@ReturnedCount INT OUTPUT
 AS
 	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Reviews R WHERE R.Description LIKE (N'%' + @LookupString + N'%'))
-	SELECT R.Username, R.Description, I.Name AS GameName
+	SELECT R.Username, R.Description, I.Name AS GameName, R.ReviewID
 	FROM gitSteamed.Reviews R
 		INNER JOIN gitSteamed.Items I ON R.ItemID = I.ItemID
 	WHERE R.Description LIKE (N'%' + @LookupString + N'%') AND R.ReviewID NOT IN (SELECT AR.ReviewID FROM gitSteamed.ArchivedReviews AR)

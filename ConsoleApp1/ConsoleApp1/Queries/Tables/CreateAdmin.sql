@@ -7,6 +7,3 @@ CREATE TABLE gitSteamed.Admin (
 	[Password] NVARCHAR(256) NOT NULL
 )
 GO
-
-
-

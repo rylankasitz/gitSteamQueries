@@ -7,43 +7,43 @@ GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10UsersPlaytime
 AS
-	SELECT TOP 10 L.Username
+	SELECT TOP 10 L.Username, SUM(L.TimePlayedForever) [Value]
 	FROM gitSteamed.Libraries L
 	GROUP BY L.Username
-	ORDER BY SUM(L.TimePlayedForever) DESC
+	ORDER BY [Value] DESC
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsPlaytime
 AS
-	SELECT TOP 10 I.[Name]
+	SELECT TOP 10 I.[Name], SUM(L.TimePlayedForever) [Value]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
 	GROUP BY I.ItemID, I.[Name]
-	ORDER BY SUM(L.TimePlayedForever) DESC
+	ORDER BY [Value] DESC
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsReviews
 AS
-	SELECT TOP 10 I.[Name]
+	SELECT TOP 10 I.[Name], COUNT(R.ReviewID) [Value]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
 		INNER JOIN gitSteamed.Reviews R ON R.ItemID = I.ItemID
 	GROUP BY I.ItemID, I.[Name]
-	ORDER BY COUNT(R.ReviewID) DESC
+	ORDER BY [Value] DESC
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsOwners
 AS
-	SELECT TOP 10 I.[Name]
+	SELECT TOP 10 I.[Name], COUNT(L.Username) [Value]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
 	GROUP BY I.ItemID, I.[Name]
-	ORDER BY COUNT(L.Username) DESC
+	ORDER BY [Value] DESC
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsUsers
 AS
-	SELECT TOP 10 I.[Name]
+	SELECT TOP 10 I.[Name], SUM(CASE WHEN (L.TimePlayedForever != 0) THEN 1 ELSE 0 END) [Value]
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Libraries L ON I.ItemID = L.ItemID
 	GROUP BY I.ItemID, I.[Name]
-	ORDER BY SUM(CASE WHEN (L.TimePlayedForever != 0) THEN 1 ELSE 0 END) DESC
+	ORDER BY [Value] DESC
 GO
 CREATE OR ALTER PROCEDURE gitSteamed.GetTop10RecommendedGames
 AS
@@ -51,7 +51,7 @@ AS
 	FROM gitSteamed.Items I
 		INNER JOIN gitSteamed.Reviews R ON R.ItemID = I.ItemID
 	GROUP BY I.[Name]
-	ORDER BY SUM(CONVERT(INT, R.Recommend)) - SUM(CASE WHEN (R.Recommend = 0) THEN 1 ELSE 0 END) DESC
+	ORDER BY Recommended DESC
 GO
 
 EXEC gitSteamed.GetTop10ItemsPlaytime
