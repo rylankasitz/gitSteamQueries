@@ -3,8 +3,7 @@ GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.AddItem
 	@price FLOAT,
-	@name NVARCHAR(128),
-	@url NVARCHAR(256)
+	@name NVARCHAR(128)
 AS
 	--SELECT @name, @url
 	--BEGIN TRAN t
@@ -18,14 +17,11 @@ AS
 		USING ItemCTE C ON	C.[Name] = I.[Name]
 		WHEN NOT MATCHED THEN*/
 		INSERT gitSteamed.Items(ItemID, Price, [URL], [Name])
-		VALUES (@ID, @price, @url, @name);
+		VALUES (@ID, @price, NULL, @name);
 		--SET @added = (SELECT COUNT(*) FROM gitSteamed.Items) - @row_before;
 	--COMMIT TRAN t;
 GO
 
 DECLARE @result INT
-EXEC gitSteamed.AddItem 1, N'ubertest6', N''
+EXEC gitSteamed.AddItem 1, N'ubertest6'
 SELECT @result
-
-SELECT * FROM gitSteamed.Items WHERE [Name] = N'"joe"'
-EXEC gitSteamed.SearchItem N'joe', 10, 1, 0

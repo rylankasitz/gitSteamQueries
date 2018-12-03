@@ -6,7 +6,7 @@ GO
 CREATE OR ALTER PROCEDURE gitSteamed.AddUser
 	@username NVARCHAR(64),
 	@itemcount INT = 0,
-	@url NVARCHAR(256) = NULL,
+	@url NVARCHAR(256) = N'',
 	@added INT OUT
 AS
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
 	USING UserCTE C ON	C.Username = U.Username
 	WHEN NOT MATCHED THEN
 		INSERT (Username, ItemCount, [Url])
-		VALUES(@username, @itemcount, @url);
+		VALUES (@username, @itemcount, @username);
 	SET @added = (SELECT COUNT(*) FROM gitSteamed.Users) - @row_before;
 END
 GO
@@ -32,6 +32,3 @@ AS
 	INSERT gitSteamed.Admin(Username, Password)
 	VALUES (@username, @password)
 GO
-
-SELECT *
-FROM gitSteamed.[Admin]

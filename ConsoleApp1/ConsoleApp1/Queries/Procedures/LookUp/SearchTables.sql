@@ -57,7 +57,9 @@ DECLARE @BundleResults INT
 
 EXEC gitSteamed.SearchItem N'count', 10, 1, @ItemsResults OUTPUT
 SELECT @ItemsResults ItemResults
-EXEC gitSteamed.SearchUser N'Ca', 10, 1, @UserResults OUTPUT
+EXEC gitSteamed.SearchUser N'job', 10, 1, @UserResults OUTPUT
 SELECT @UserResults UserResults
 EXEC gitSteamed.SearchBundle N'aB', 5, 3, @BundleResults OUTPUT
 SELECT @BundleResults BundleResults
+
+SELECT * FROM gitSteamed.Users WHERE Username = N'undefined'

@@ -17,17 +17,10 @@ GO
 DROP TABLE IF EXISTS gitSteamed.Genres;
 GO
 
-
-
-
 CREATE TABLE gitSteamed.Users (
 	Username NVARCHAR(64) NOT NULL PRIMARY KEY,
 	ItemCount INT NOT NULL,
-	[Url] NVARCHAR(256) NOT NULL,
-	CONSTRAINT [UK_gitSteamed_Users_Url] UNIQUE
-	(
-		[Url] ASC
-	)
+	[Url] NVARCHAR(256) NULL,
 )
 GO
 
@@ -57,8 +50,6 @@ CREATE TABLE gitSteamed.ItemsGenreContents
 		ItemID ASC
 	)
 )
-
-
 
 create table gitSteamed.Bundles
 (
