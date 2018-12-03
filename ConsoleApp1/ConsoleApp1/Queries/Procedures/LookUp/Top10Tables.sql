@@ -29,7 +29,7 @@ AS
 	GROUP BY I.ItemID, I.[Name]
 	ORDER BY COUNT(R.ReviewID) DESC
 GO
-CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemOwners
+CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsOwners
 AS
 	SELECT TOP 10 I.[Name]
 	FROM gitSteamed.Items I
@@ -37,7 +37,7 @@ AS
 	GROUP BY I.ItemID, I.[Name]
 	ORDER BY COUNT(L.Username) DESC
 GO
-CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemUsers
+CREATE OR ALTER PROCEDURE gitSteamed.GetTop10ItemsUsers
 AS
 	SELECT TOP 10 I.[Name]
 	FROM gitSteamed.Items I
@@ -57,6 +57,6 @@ GO
 EXEC gitSteamed.GetTop10ItemsPlaytime
 EXEC gitSteamed.GetTop10UsersPlaytime
 EXEC gitSteamed.GetTop10ItemsReviews
-EXEC gitSteamed.GetTop10ItemOwners
-EXEC gitSteamed.GetTop10ItemUsers
+EXEC gitSteamed.GetTop10ItemsOwners
+EXEC gitSteamed.GetTop10ItemsUsers
 EXEC gitSteamed.GetTop10RecommendedGames

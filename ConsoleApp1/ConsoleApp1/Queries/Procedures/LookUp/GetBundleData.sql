@@ -36,6 +36,6 @@ AS
 GO
 
 
-EXEC gitSteamed.GetBundleGames 1150
-EXEC gitSteamed.GetBundleStats 1150
-EXEC gitSteamed.GetBundleGenreLayout 1150
+EXEC gitSteamed.GetBundleGames 268
+EXEC gitSteamed.GetBundleStats 268
+EXEC gitSteamed.GetBundleGenreLayout 268

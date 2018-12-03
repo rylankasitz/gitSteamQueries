@@ -19,6 +19,6 @@ AS
 		VALUES (T.GenreID, T.ItemID);
 GO
 
-EXEC gitSteamed.AddGenreToItem N'Software', 10
-EXEC gitSteamed.AddGenreToItem N'Weeb', 333600
-EXEC gitSteamed.GetGameGenres 333600
+EXEC gitSteamed.GetUserGames N'REBAS_AS_F-T', 10, 3, 0
+EXEC gitSteamed.AddGenreToItem N'Weeb', 462990
+EXEC gitSteamed.GetGenreTotals

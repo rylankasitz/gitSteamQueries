@@ -4,17 +4,17 @@ DROP PROCEDURE IF EXISTS gitSteamed.[Login]
 GO
 
 CREATE OR ALTER PROCEDURE gitSteamed.SearchReview
-	@ReviewSearch NVARCHAR(128),
+	@LookupString NVARCHAR(128),
 	@ResultCount INT,
 	@PageNumber INT,
 	@ReturnedCount INT OUTPUT
 AS
-	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Reviews R WHERE R.Description LIKE (N'%' + @ReviewSearch + N'%'))
+	SET @ReturnedCount = (SELECT COUNT(*) FROM gitSteamed.Reviews R WHERE R.Description LIKE (N'%' + @LookupString + N'%'))
 	SELECT R.Username, R.Description, I.Name AS GameName
 	FROM gitSteamed.Reviews R
 		INNER JOIN gitSteamed.Items I ON R.ItemID = I.ItemID
-	WHERE R.Description LIKE (N'%' + @ReviewSearch + N'%') AND R.ReviewID NOT IN (SELECT AR.ReviewID FROM gitSteamed.ArchivedReviews AR)
-	ORDER BY (CASE WHEN R.[Description] LIKE (@ReviewSearch + N'%') THEN 1 ELSE 2 END), R.Username DESC
+	WHERE R.Description LIKE (N'%' + @LookupString + N'%') AND R.ReviewID NOT IN (SELECT AR.ReviewID FROM gitSteamed.ArchivedReviews AR)
+	ORDER BY (CASE WHEN R.[Description] LIKE (@LookupString + N'%') THEN 1 ELSE 2 END), R.Username DESC
 	OFFSET (@ResultCount*(@PageNumber-1)) ROWS FETCH NEXT @ResultCount ROWS ONLY
 GO
 
